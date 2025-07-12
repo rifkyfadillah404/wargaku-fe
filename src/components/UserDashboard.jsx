@@ -6,6 +6,7 @@ import PaymentDetailModal from "./PaymentDetailModal";
 import { Button } from "./ui/Button";
 import { Input, Select } from "./ui/Input";
 import { Badge } from "./ui/Badge";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/Card";
 
 const UserDashboard = () => {
   const { user, logout } = useAuth();
@@ -150,143 +151,219 @@ const UserDashboard = () => {
   }
 
   return (
-    <div className="container-fluid">
-      {/* Header */}
-      <div className="row mb-4">
-        <div className="col-12">
-          <div className="d-flex justify-content-between align-items-center">
-            <div>
-              <h1 className="h3 mb-0">Dashboard User</h1>
-              <p className="text-muted">Selamat datang, {user?.masyarakat_nama || user?.username}</p>
+    <div className="min-vh-100" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}>
+      {/* Top Navigation */}
+      <nav className="navbar navbar-expand-lg navbar-dark bg-transparent">
+        <div className="container-fluid px-4">
+          <div className="d-flex align-items-center">
+            <div className="bg-white bg-opacity-20 rounded-3 p-2 me-3">
+              <i className="bi bi-person-circle text-white fs-4"></i>
             </div>
             <div>
-              <Button variant="default" className="me-2" onClick={() => setShowPaymentModal(true)}>
-                <i className="bi bi-plus-circle me-2"></i>
-                Bayar Iuran
-              </Button>
-              <Button variant="outline" onClick={logout}>
-                <i className="bi bi-box-arrow-right me-2"></i>
-                Logout
-              </Button>
+              <h5 className="mb-0 text-white fw-bold">User Dashboard</h5>
+              <small className="text-white-50">RT Management System</small>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Statistics Cards */}
-      <div className="row mb-4">
-        <div className="col-md-3">
-          <div className="card bg-primary text-white">
-            <div className="card-body">
-              <div className="d-flex justify-content-between">
-                <div>
-                  <h4 className="card-title">{stats.total}</h4>
-                  <p className="card-text">Total Pembayaran</p>
+          <div className="d-flex align-items-center gap-3">
+            <div className="text-white-50 d-none d-md-block">
+              <i className="bi bi-person me-2"></i>
+              {user?.masyarakat_nama || user?.username}
+            </div>
+            <Button variant="default" className="btn-light fw-medium" onClick={() => setShowPaymentModal(true)}>
+              <i className="bi bi-plus-circle me-2"></i>
+              Bayar Iuran
+            </Button>
+            <Button variant="outline" className="btn-outline-light" onClick={logout}>
+              <i className="bi bi-box-arrow-right me-2"></i>
+              Logout
+            </Button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <div className="container-fluid px-4 pb-5">
+        {/* Welcome Section */}
+        <div className="row mb-5">
+          <div className="col-12">
+            <div className="text-center text-white py-4">
+              <h1 className="display-5 fw-bold mb-3">Selamat Datang, {user?.masyarakat_nama || user?.username}! 👋</h1>
+              <p className="lead mb-4">Kelola pembayaran iuran RT Anda dengan mudah dan praktis</p>
+              <div className="d-flex justify-content-center align-items-center gap-4 text-white-50">
+                <div className="d-flex align-items-center">
+                  <i className="bi bi-calendar3 me-2"></i>
+                  <span>{new Date().toLocaleDateString("id-ID", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</span>
                 </div>
-                <i className="bi bi-receipt display-4 opacity-50"></i>
+                <div className="d-flex align-items-center">
+                  <i className="bi bi-clock me-2"></i>
+                  <span>{new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="col-md-3">
-          <div className="card bg-warning text-white">
-            <div className="card-body">
-              <div className="d-flex justify-content-between">
-                <div>
-                  <h4 className="card-title">{stats.pending}</h4>
-                  <p className="card-text">Menunggu Persetujuan</p>
+        {/* Statistics Cards */}
+        <div className="row g-4 mb-5">
+          <div className="col-lg-3 col-md-6">
+            <Card className="border-0 h-100 shadow-lg" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)" }}>
+              <CardContent className="text-white p-4">
+                <div className="d-flex align-items-center">
+                  <div className="flex-shrink-0">
+                    <div className="bg-white bg-opacity-20 rounded-3 p-3">
+                      <i className="bi bi-receipt text-white fs-3"></i>
+                    </div>
+                  </div>
+                  <div className="flex-grow-1 ms-3">
+                    <CardDescription className="text-white-50 text-uppercase fw-bold mb-1 small">Total Pembayaran</CardDescription>
+                    <CardTitle className="text-white fs-1 mb-1 fw-bold">{stats.total}</CardTitle>
+                    <div className="text-white-50 small">
+                      <i className="bi bi-arrow-up me-1"></i>Semua transaksi
+                    </div>
+                  </div>
                 </div>
-                <i className="bi bi-clock display-4 opacity-50"></i>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="col-lg-3 col-md-6">
+            <Card className="border-0 h-100 shadow-lg" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)" }}>
+              <CardContent className="text-white p-4">
+                <div className="d-flex align-items-center">
+                  <div className="flex-shrink-0">
+                    <div className="bg-white bg-opacity-20 rounded-3 p-3">
+                      <i className="bi bi-clock text-white fs-3"></i>
+                    </div>
+                  </div>
+                  <div className="flex-grow-1 ms-3">
+                    <CardDescription className="text-white-50 text-uppercase fw-bold mb-1 small">Menunggu</CardDescription>
+                    <CardTitle className="text-white fs-1 mb-1 fw-bold">{stats.pending}</CardTitle>
+                    <div className="text-white-50 small">
+                      <i className="bi bi-clock me-1"></i>Perlu persetujuan
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="col-lg-3 col-md-6">
+            <Card className="border-0 h-100 shadow-lg" style={{ background: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)" }}>
+              <CardContent className="text-white p-4">
+                <div className="d-flex align-items-center">
+                  <div className="flex-shrink-0">
+                    <div className="bg-white bg-opacity-20 rounded-3 p-3">
+                      <i className="bi bi-check-circle text-white fs-3"></i>
+                    </div>
+                  </div>
+                  <div className="flex-grow-1 ms-3">
+                    <CardDescription className="text-white-50 text-uppercase fw-bold mb-1 small">Disetujui</CardDescription>
+                    <CardTitle className="text-white fs-1 mb-1 fw-bold">{stats.approved}</CardTitle>
+                    <div className="text-white-50 small">
+                      <i className="bi bi-check me-1"></i>Sudah disetujui
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="col-lg-3 col-md-6">
+            <Card className="border-0 h-100 shadow-lg" style={{ background: "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)" }}>
+              <CardContent className="text-white p-4">
+                <div className="d-flex align-items-center">
+                  <div className="flex-shrink-0">
+                    <div className="bg-white bg-opacity-20 rounded-3 p-3">
+                      <i className="bi bi-x-circle text-white fs-3"></i>
+                    </div>
+                  </div>
+                  <div className="flex-grow-1 ms-3">
+                    <CardDescription className="text-white-50 text-uppercase fw-bold mb-1 small">Ditolak</CardDescription>
+                    <CardTitle className="text-white fs-1 mb-1 fw-bold">{stats.rejected}</CardTitle>
+                    <div className="text-white-50 small">
+                      <i className="bi bi-x me-1"></i>Perlu diperbaiki
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
-        <div className="col-md-3">
-          <div className="card bg-success text-white">
-            <div className="card-body">
-              <div className="d-flex justify-content-between">
-                <div>
-                  <h4 className="card-title">{stats.approved}</h4>
-                  <p className="card-text">Disetujui</p>
-                </div>
-                <i className="bi bi-check-circle display-4 opacity-50"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-md-3">
-          <div className="card bg-danger text-white">
-            <div className="card-body">
-              <div className="d-flex justify-content-between">
-                <div>
-                  <h4 className="card-title">{stats.rejected}</h4>
-                  <p className="card-text">Ditolak</p>
-                </div>
-                <i className="bi bi-x-circle display-4 opacity-50"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Payment History */}
-      <div className="row">
-        <div className="col-12">
-          <div className="card">
-            <div className="card-header">
-              <h5 className="card-title mb-0">
-                <i className="bi bi-clock-history me-2"></i>
-                Riwayat Pembayaran
-              </h5>
-            </div>
-            <div className="card-body">
-              {payments.length === 0 ? (
-                <div className="text-center py-4">
-                  <i className="bi bi-receipt display-4 text-muted mb-3"></i>
-                  <p className="text-muted">Belum ada riwayat pembayaran</p>
-                  <button className="btn btn-primary" onClick={() => setShowPaymentModal(true)}>
+        {/* Payment History */}
+        <div className="row">
+          <div className="col-12">
+            <Card className="border-0 shadow-lg bg-white">
+              <CardHeader className="bg-white border-0 pb-0">
+                <div className="d-flex justify-content-between align-items-center">
+                  <CardTitle className="d-flex align-items-center mb-0">
+                    <div className="bg-primary rounded-3 p-2 me-3">
+                      <i className="bi bi-clock-history text-white"></i>
+                    </div>
+                    <div>
+                      <h5 className="mb-0">Riwayat Pembayaran</h5>
+                      <small className="text-muted">Kelola dan pantau pembayaran iuran Anda</small>
+                    </div>
+                  </CardTitle>
+                  <Button variant="default" className="btn-primary" onClick={() => setShowPaymentModal(true)}>
                     <i className="bi bi-plus-circle me-2"></i>
-                    Bayar Iuran Pertama
-                  </button>
+                    Bayar Iuran
+                  </Button>
                 </div>
-              ) : (
-                <div className="table-responsive">
-                  <table className="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>Jenis Pembayaran</th>
-                        <th>Bulan</th>
-                        <th>Jumlah</th>
-                        <th>Status</th>
-                        <th>Tanggal Submit</th>
-                        <th>Tanggal Bayar</th>
-                        <th>Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {payments.map((payment) => (
-                        <tr key={payment.id}>
-                          <td>{payment.payment_type_name}</td>
-                          <td>{payment.payment_month}</td>
-                          <td>{formatCurrency(payment.amount)}</td>
-                          <td>{getStatusBadge(payment.status)}</td>
-                          <td>{formatDate(payment.created_at)}</td>
-                          <td>{payment.payment_date ? formatDate(payment.payment_date) : "-"}</td>
-                          <td>
-                            <button className="btn btn-sm btn-info" onClick={() => handleShowDetail(payment.id)} title="Lihat Detail">
-                              <i className="bi bi-eye"></i>
-                            </button>
-                          </td>
+              </CardHeader>
+              <CardContent className="p-4">
+                {payments.length === 0 ? (
+                  <div className="text-center py-5">
+                    <div className="mb-4">
+                      <div className="bg-light rounded-circle d-inline-flex p-4 mb-3">
+                        <i className="bi bi-receipt display-4 text-muted"></i>
+                      </div>
+                    </div>
+                    <h5 className="text-muted mb-3">Belum ada riwayat pembayaran</h5>
+                    <p className="text-muted mb-4">Mulai bayar iuran RT Anda untuk melihat riwayat pembayaran di sini</p>
+                    <Button variant="default" className="btn-primary btn-lg" onClick={() => setShowPaymentModal(true)}>
+                      <i className="bi bi-plus-circle me-2"></i>
+                      Bayar Iuran Pertama
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="table-responsive">
+                    <table className="table table-hover">
+                      <thead className="table-light">
+                        <tr>
+                          <th className="border-0 fw-semibold">Jenis Pembayaran</th>
+                          <th className="border-0 fw-semibold">Bulan</th>
+                          <th className="border-0 fw-semibold">Jumlah</th>
+                          <th className="border-0 fw-semibold">Status</th>
+                          <th className="border-0 fw-semibold">Tanggal Submit</th>
+                          <th className="border-0 fw-semibold">Tanggal Bayar</th>
+                          <th className="border-0 fw-semibold">Aksi</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
+                      </thead>
+                      <tbody>
+                        {payments.map((payment) => (
+                          <tr key={payment.id} className="align-middle">
+                            <td className="fw-medium">{payment.payment_type_name}</td>
+                            <td>{payment.payment_month}</td>
+                            <td className="fw-semibold text-primary">{formatCurrency(payment.amount)}</td>
+                            <td>{getStatusBadge(payment.status)}</td>
+                            <td>{formatDate(payment.created_at)}</td>
+                            <td>{payment.payment_date ? formatDate(payment.payment_date) : <span className="text-muted">-</span>}</td>
+                            <td>
+                              <Button variant="outline" size="sm" onClick={() => handleShowDetail(payment.id)} title="Lihat Detail">
+                                <i className="bi bi-eye me-1"></i>
+                                Detail
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
