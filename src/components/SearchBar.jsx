@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { Search, X } from "lucide-react";
+import { Input } from "./ui/Input";
+import { Button } from "./ui/Button";
 
 const SearchBar = ({ onSearch }) => {
   const [keyword, setKeyword] = useState("");
@@ -14,20 +17,21 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="input-group">
-        <span className="input-group-text">
-          <i className="bi bi-search"></i>
-        </span>
-
-        <input type="text" value={keyword} onChange={(e) => setKeyword(e.target.value)} placeholder="Cari berdasarkan nama, NIK, atau alamat..." className="form-control" />
-
-        {keyword && (
-          <button type="button" onClick={handleClear} className="btn btn-outline-secondary">
-            <i className="bi bi-x"></i>
-          </button>
-        )}
+    <form onSubmit={handleSubmit} className="flex gap-2">
+      <div className="relative flex-1">
+        <Input
+          type="text"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          placeholder="Cari berdasarkan nama, NIK, atau alamat..."
+          className="pl-10"
+        />
       </div>
+      {keyword && (
+        <Button type="button" onClick={handleClear} variant="outline" size="icon">
+          <X className="h-4 w-4" />
+        </Button>
+      )}
     </form>
   );
 };

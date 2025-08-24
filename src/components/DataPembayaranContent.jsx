@@ -103,6 +103,13 @@ const DataPembayaranContent = () => {
     );
   }
 
+  const counts = {
+    total: payments.length,
+    pending: payments.filter((p) => p.status === "pending").length,
+    approved: payments.filter((p) => p.status === "approved").length,
+    rejected: payments.filter((p) => p.status === "rejected").length,
+  };
+
   return (
     <>
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -110,20 +117,57 @@ const DataPembayaranContent = () => {
           <h2 className="h3 mb-1">Data Pembayaran</h2>
           <p className="text-muted mb-0">Kelola semua data pembayaran masyarakat</p>
         </div>
-        <div className="d-flex align-items-center gap-2">
-          <Badge variant="outline">{filteredPayments.length} pembayaran</Badge>
+        <div className="d-flex flex-wrap align-items-center gap-2">
+          <span className="badge bg-secondary-subtle text-secondary-emphasis">
+            Total: {counts.total}
+          </span>
+          <button
+            className={`btn btn-sm ${filter === "all" ? "btn-primary" : "btn-outline-secondary"}`}
+            onClick={() => setFilter("all")}
+          >
+            Semua <span className="badge bg-light text-dark ms-1">{counts.total}</span>
+          </button>
+          <button
+            className={`btn btn-sm ${filter === "pending" ? "btn-primary" : "btn-outline-secondary"}`}
+            onClick={() => setFilter("pending")}
+          >
+            Menunggu <span className="badge bg-light text-dark ms-1">{counts.pending}</span>
+          </button>
+          <button
+            className={`btn btn-sm ${filter === "approved" ? "btn-primary" : "btn-outline-secondary"}`}
+            onClick={() => setFilter("approved")}
+          >
+            Disetujui <span className="badge bg-light text-dark ms-1">{counts.approved}</span>
+          </button>
+          <button
+            className={`btn btn-sm ${filter === "rejected" ? "btn-primary" : "btn-outline-secondary"}`}
+            onClick={() => setFilter("rejected")}
+          >
+            Ditolak <span className="badge bg-light text-dark ms-1">{counts.rejected}</span>
+          </button>
         </div>
       </div>
 
       {/* Filters */}
-      <Card className="mb-4">
+      <Card className="mb-4 border-0 shadow-sm card-hover">
         <CardContent className="p-4">
           <div className="row g-3">
-            <div className="col-md-6">
+            <div className="col-lg-8">
               <label className="form-label">Cari Pembayaran</label>
-              <input type="text" className="form-control" placeholder="Cari berdasarkan nama, jenis pembayaran, atau bulan..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+              <div className="input-group">
+                <span className="input-group-text bg-transparent">
+                  <i className="bi bi-search"></i>
+                </span>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Cari berdasarkan nama, jenis pembayaran, atau bulan..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
             </div>
-            <div className="col-md-6">
+            <div className="col-lg-4">
               <label className="form-label">Filter Status</label>
               <select className="form-select" value={filter} onChange={(e) => setFilter(e.target.value)}>
                 <option value="all">Semua Status</option>
@@ -137,7 +181,7 @@ const DataPembayaranContent = () => {
       </Card>
 
       {/* Payments Table */}
-      <Card>
+      <Card className="border-0 shadow-sm card-hover">
         <CardHeader>
           <CardTitle className="d-flex align-items-center">
             <i className="bi bi-credit-card-2-front me-2 text-primary"></i>
@@ -151,9 +195,9 @@ const DataPembayaranContent = () => {
               <p className="text-muted">{searchTerm || filter !== "all" ? "Tidak ada pembayaran yang sesuai dengan filter" : "Belum ada data pembayaran"}</p>
             </div>
           ) : (
-            <div className="table-responsive">
-              <table className="table table-hover">
-                <thead>
+            <div className="table-responsive table-fixed">
+              <table className="table table-striped table-hover align-middle table-nowrap">
+                <thead className="table-light">
                   <tr>
                     <th>Nama</th>
                     <th>Jenis Pembayaran</th>

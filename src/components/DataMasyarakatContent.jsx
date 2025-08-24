@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Plus } from "lucide-react";
 import DataMasyarakatTable from "./DataMasyarakatTable";
 import FormMasyarakat from "./FormMasyarakat";
 import SearchBar from "./SearchBar";
@@ -79,18 +80,16 @@ function DataMasyarakatContent() {
   }
 
   return (
-    <div>
+    <div className="space-y-6">
       {/* Action Bar */}
-      <div className="row mb-4">
-        <div className="col-md-8">
+      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+        <div className="flex-1 max-w-md">
           <SearchBar onSearch={handleSearch} />
         </div>
-        <div className="col-md-4 d-flex justify-content-md-end">
-          <Button onClick={handleAdd} variant="default">
-            <i className="bi bi-plus-circle me-2"></i>
-            <span>Tambah Data</span>
-          </Button>
-        </div>
+        <Button onClick={handleAdd} variant="default">
+          <Plus className="h-4 w-4 mr-2" />
+          <span>Tambah Data</span>
+        </Button>
       </div>
 
       {/* Data Table */}

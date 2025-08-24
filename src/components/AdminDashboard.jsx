@@ -2,12 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import api from "../services/api";
 import { toast } from "react-hot-toast";
-import PaymentDetailModal from "./PaymentDetailModal";
 import DataMasyarakatContent from "./DataMasyarakatContent";
 import DataPembayaranContent from "./DataPembayaranContent";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/Card";
-import { Button } from "./ui/Button";
-import { Badge } from "./ui/Badge";
 import { PaymentStatusChart, MonthlyPaymentChart } from "./DashboardChart";
 import PaymentApprovalTable from "./PaymentApprovalTable";
 
@@ -21,8 +18,6 @@ const AdminDashboard = () => {
   const [pendingPayments, setPendingPayments] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedPayment, setSelectedPayment] = useState(null);
-  const [showDetailModal, setShowDetailModal] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard"); // dashboard, masyarakat, pembayaran
 
   useEffect(() => {
@@ -83,50 +78,15 @@ const AdminDashboard = () => {
     }
   };
 
-  const handlePaymentAction = async (paymentId, status, notes = "") => {
-    try {
-      await api.put(`/payments/${paymentId}/status`, { status, notes });
-      toast.success(`Pembayaran berhasil ${status === "approved" ? "disetujui" : "ditolak"}`);
-      setShowDetailModal(false);
-      fetchDashboardData();
-    } catch (error) {
-      console.error("Error updating payment:", error);
-      toast.error("Gagal memperbarui status pembayaran");
-    }
-  };
 
-  const handleShowDetail = async (paymentId) => {
-    try {
-      const response = await api.get(`/payments/${paymentId}`);
-      setSelectedPayment(response.data.data);
-      setShowDetailModal(true);
-    } catch (error) {
-      console.error("Error fetching payment detail:", error);
-      toast.error("Gagal memuat detail pembayaran");
-    }
-  };
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("id-ID", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
 
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center min-vh-100">
         <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...s</span>
+          <span className="visually-hidden">Loading...</span>
         </div>
       </div>
     );
@@ -135,7 +95,7 @@ const AdminDashboard = () => {
   return (
     <div className="d-flex min-vh-100">
       {/* Sidebar */}
-      <div className="sidebar bg-dark text-white">
+      <div className="sidebar text-white shadow-lg">
         {/* Sidebar Header */}
         <div className="p-4 border-bottom border-secondary">
           <div className="d-flex align-items-center">
@@ -189,7 +149,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="main-content" style={{ background: "#f8fafc" }}>
+      <div className="main-content bg-light">
         {/* Top Header */}
         <div className="bg-white shadow-sm border-bottom p-3 d-lg-none">
           <div className="d-flex justify-content-between align-items-center">
@@ -201,7 +161,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Dashboard Content */}
-        <div className="p-4">
+        <div className="container-fluid p-4 p-lg-5">
           {activeTab === "dashboard" && (
             <>
               {/* Page Header */}
@@ -221,7 +181,7 @@ const AdminDashboard = () => {
               {/* Statistics Cards */}
               <div className="row g-4 mb-5">
                 <div className="col-xl-3 col-md-6">
-                  <Card className="border-0 h-100" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}>
+                  <Card className="border-0 h-100 card-hover" style={{ background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)" }}>
                     <CardContent className="text-white">
                       <div className="d-flex align-items-center">
                         <div className="flex-shrink-0">
@@ -242,7 +202,7 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className="col-xl-3 col-md-6">
-                  <Card className="border-0 h-100" style={{ background: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)" }}>
+                  <Card className="border-0 h-100 card-hover" style={{ background: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)" }}>
                     <CardContent className="text-white">
                       <div className="d-flex align-items-center">
                         <div className="flex-shrink-0">
@@ -263,7 +223,7 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className="col-xl-3 col-md-6">
-                  <Card className="border-0 h-100" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)" }}>
+                  <Card className="border-0 h-100 card-hover" style={{ background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)" }}>
                     <CardContent className="text-white">
                       <div className="d-flex align-items-center">
                         <div className="flex-shrink-0">
@@ -284,7 +244,7 @@ const AdminDashboard = () => {
                 </div>
 
                 <div className="col-xl-3 col-md-6">
-                  <Card className="border-0 h-100" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)" }}>
+                  <Card className="border-0 h-100 card-hover" style={{ background: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)" }}>
                     <CardContent className="text-white">
                       <div className="d-flex align-items-center">
                         <div className="flex-shrink-0">
@@ -396,8 +356,6 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Payment Detail Modal */}
-      {showDetailModal && selectedPayment && <PaymentDetailModal payment={selectedPayment} onClose={() => setShowDetailModal(false)} onAction={handlePaymentAction} />}
     </div>
   );
 };

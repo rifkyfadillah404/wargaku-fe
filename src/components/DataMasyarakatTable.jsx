@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { Edit, Trash2, Loader2 } from "lucide-react";
 import { masyarakatAPI } from "../services/api";
+import { Button } from "./ui/Button";
 import toast from "react-hot-toast";
 
 const DataMasyarakatTable = ({ data, loading, onEdit, onRefresh }) => {
@@ -55,53 +57,49 @@ const DataMasyarakatTable = ({ data, loading, onEdit, onRefresh }) => {
   }
 
   return (
-    <div className="table-responsive table-responsive-custom">
-      <table className="table table-hover mb-0">
-        <thead className="table-light">
-          <tr>
-            <th scope="col" className="text-center">
-              No
-            </th>
-            <th scope="col">NIK</th>
-            <th scope="col">Nama</th>
-            <th scope="col">Tempat, Tanggal Lahir</th>
-            <th scope="col">Jenis Kelamin</th>
-            <th scope="col">Alamat</th>
-            <th scope="col">Kelurahan</th>
-            <th scope="col" className="text-center">
-              Aksi
-            </th>
+    <div className="overflow-x-auto">
+      <table className="w-full border-collapse">
+        <thead>
+          <tr className="border-b bg-muted/50">
+            <th className="text-center p-3 text-sm font-medium text-muted-foreground">No</th>
+            <th className="text-left p-3 text-sm font-medium text-muted-foreground">NIK</th>
+            <th className="text-left p-3 text-sm font-medium text-muted-foreground">Nama</th>
+            <th className="text-left p-3 text-sm font-medium text-muted-foreground">Tempat, Tanggal Lahir</th>
+            <th className="text-left p-3 text-sm font-medium text-muted-foreground">Jenis Kelamin</th>
+            <th className="text-left p-3 text-sm font-medium text-muted-foreground">Alamat</th>
+            <th className="text-left p-3 text-sm font-medium text-muted-foreground">Kelurahan</th>
+            <th className="text-center p-3 text-sm font-medium text-muted-foreground">Aksi</th>
           </tr>
         </thead>
         <tbody>
           {data.map((item, index) => (
-            <tr key={item.id}>
-              <td className="text-center">{index + 1}</td>
-              <td className="font-monospace small">{item.nik}</td>
-              <td>
-                <div className="fw-medium">{item.nama}</div>
-                <div className="text-muted small">{item.pekerjaan}</div>
+            <tr key={item.id} className="border-b hover:bg-muted/25 transition-colors">
+              <td className="text-center p-3 text-sm">{index + 1}</td>
+              <td className="p-3 text-sm font-mono">{item.nik}</td>
+              <td className="p-3">
+                <div className="font-medium text-sm">{item.nama}</div>
+                <div className="text-muted-foreground text-xs">{item.pekerjaan}</div>
               </td>
-              <td>
+              <td className="p-3 text-sm">
                 {item.tempat_lahir}, {formatDate(item.tanggal_lahir)}
               </td>
-              <td>{item.jenis_kelamin}</td>
-              <td className="text-truncate" style={{ maxWidth: "200px" }}>
+              <td className="p-3 text-sm">{item.jenis_kelamin}</td>
+              <td className="p-3 text-sm max-w-[200px] truncate">
                 {item.alamat}, RT {item.rt}/RW {item.rw}
               </td>
-              <td>
-                <div>{item.kelurahan}</div>
-                <div className="text-muted small">{item.kecamatan}</div>
+              <td className="p-3">
+                <div className="text-sm">{item.kelurahan}</div>
+                <div className="text-muted-foreground text-xs">{item.kecamatan}</div>
               </td>
-              <td className="text-center">
-                <div className="btn-group" role="group">
-                  <button onClick={() => onEdit(item)} className="btn btn-sm btn-outline-primary" title="Edit">
-                    <i className="bi bi-pencil"></i>
-                  </button>
+              <td className="text-center p-3">
+                <div className="flex gap-1 justify-center">
+                  <Button onClick={() => onEdit(item)} variant="outline" size="sm" title="Edit">
+                    <Edit className="h-4 w-4" />
+                  </Button>
 
-                  <button onClick={() => handleDelete(item.id, item.nama)} disabled={deleting === item.id} className="btn btn-sm btn-outline-danger" title="Hapus">
-                    {deleting === item.id ? <div className="spinner-border spinner-border-sm" role="status"></div> : <i className="bi bi-trash"></i>}
-                  </button>
+                  <Button onClick={() => handleDelete(item.id, item.nama)} disabled={deleting === item.id} variant="outline" size="sm" title="Hapus" className="text-destructive hover:text-destructive">
+                    {deleting === item.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                  </Button>
                 </div>
               </td>
             </tr>

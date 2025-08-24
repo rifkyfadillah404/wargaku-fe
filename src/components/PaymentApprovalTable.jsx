@@ -60,7 +60,7 @@ const PaymentApprovalTable = ({ payments, onRefresh }) => {
 
   if (!payments || payments.length === 0) {
     return (
-      <Card>
+      <Card className="border-0 shadow-sm card-hover">
         <CardHeader>
           <CardTitle className="d-flex align-items-center">
             <i className="bi bi-clock-history me-2 text-warning"></i>
@@ -79,7 +79,7 @@ const PaymentApprovalTable = ({ payments, onRefresh }) => {
 
   return (
     <>
-      <Card>
+      <Card className="border-0 shadow-sm card-hover">
         <CardHeader>
           <CardTitle className="d-flex align-items-center justify-content-between">
             <div className="d-flex align-items-center">
@@ -90,9 +90,9 @@ const PaymentApprovalTable = ({ payments, onRefresh }) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="table-responsive">
-            <table className="table table-hover">
-              <thead>
+          <div className="table-responsive table-fixed">
+            <table className="table table-striped table-hover align-middle table-nowrap">
+              <thead className="table-light">
                 <tr>
                   <th>Nama</th>
                   <th>Jenis Pembayaran</th>
@@ -146,7 +146,7 @@ const PaymentApprovalTable = ({ payments, onRefresh }) => {
       {/* Action Modal */}
       {showModal && (
         <div className="modal show d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-          <div className="modal-dialog">
+          <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">{actionType === "approve" ? "Setujui" : "Tolak"} Pembayaran</h5>

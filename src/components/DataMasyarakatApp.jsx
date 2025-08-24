@@ -4,6 +4,8 @@ import FormMasyarakat from "./FormMasyarakat";
 import SearchBar from "./SearchBar";
 import { masyarakatAPI } from "../services/api";
 import { useAuth } from "../contexts/AuthContext";
+import { Button } from "./ui/Button";
+import { Card, CardContent } from "./ui/Card";
 
 function DataMasyarakatApp() {
   const { logout, user } = useAuth();
@@ -11,7 +13,6 @@ function DataMasyarakatApp() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingData, setEditingData] = useState(null);
-  const [searchKeyword, setSearchKeyword] = useState("");
 
   // Load data saat komponen pertama kali dimount
   useEffect(() => {
@@ -35,7 +36,6 @@ function DataMasyarakatApp() {
   const handleSearch = async (keyword) => {
     try {
       setLoading(true);
-      setSearchKeyword(keyword);
 
       if (keyword.trim() === "") {
         await loadData();
@@ -124,19 +124,19 @@ function DataMasyarakatApp() {
             <SearchBar onSearch={handleSearch} />
           </div>
           <div className="col-md-4 d-flex justify-content-md-end">
-            <button onClick={handleAdd} className="btn btn-custom-primary d-flex align-items-center">
-              <i className="bi bi-plus-circle me-2"></i>
+            <Button onClick={handleAdd} size="xl" className="gap-2">
+              <i className="bi bi-plus-circle"></i>
               <span>Tambah Data</span>
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Data Table */}
-        <div className="card card-custom">
-          <div className="card-body">
+        <Card>
+          <CardContent>
             <DataMasyarakatTable data={data} loading={loading} onEdit={handleEdit} onRefresh={loadData} />
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </main>
 
       {/* Form Modal */}

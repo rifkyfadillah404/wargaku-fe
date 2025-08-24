@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { User, Plus, LogOut, CreditCard, Clock, CheckCircle, XCircle } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import api from "../services/api";
 import { toast } from "react-hot-toast";
@@ -10,6 +11,18 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/
 
 const UserDashboard = () => {
   const { user, logout } = useAuth();
+
+  // Pake data dari localStorage kalo user ga ada (untuk masyarakat login)
+  const currentUser = user || {
+    id: "masyarakat_" + localStorage.getItem("userNIK"),
+    username: localStorage.getItem("userName"),
+    masyarakat_nama: localStorage.getItem("userName"),
+    masyarakat_nik: localStorage.getItem("userNIK"),
+    role: "user",
+  };
+
+  console.log("UserDashboard - Current user:", currentUser);
+
   const [payments, setPayments] = useState([]);
   const [paymentTypes, setPaymentTypes] = useState([]);
   const [stats, setStats] = useState({ total: 0, pending: 0, approved: 0, rejected: 0 });
@@ -142,10 +155,8 @@ const UserDashboard = () => {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center min-vh-100">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
+      <div className="flex justify-center items-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
@@ -165,17 +176,33 @@ const UserDashboard = () => {
             </div>
           </div>
 
-          <div className="d-flex align-items-center gap-3">
-            <div className="text-white-50 d-none d-md-block">
-              <i className="bi bi-person me-2"></i>
-              {user?.masyarakat_nama || user?.username}
+          <div className="flex items-center gap-3">
+            <div className="text-white/70 hidden md:block">
+              <User className="inline mr-2 h-4 w-4" />
+              {currentUser?.masyarakat_nama || currentUser?.username}
             </div>
-            <Button variant="default" className="btn-light fw-medium" onClick={() => setShowPaymentModal(true)}>
-              <i className="bi bi-plus-circle me-2"></i>
+            <Button variant="default" className="bg-white text-gray-900 hover:bg-gray-100" onClick={() => setShowPaymentModal(true)}>
+              <Plus className="mr-2 h-4 w-4" />
               Bayar Iuran
             </Button>
-            <Button variant="outline" className="btn-outline-light" onClick={logout}>
-              <i className="bi bi-box-arrow-right me-2"></i>
+            <Button
+              variant="outline"
+              className="border-white text-white hover:bg-white hover:text-gray-900"
+              onClick={() => {
+                // Clear localStorage untuk masyarakat login
+                localStorage.removeItem("userName");
+                localStorage.removeItem("userNIK");
+
+                // Logout dari auth context juga
+                if (logout) {
+                  logout();
+                }
+
+                // Redirect ke login
+                window.location.href = "/login";
+              }}
+            >
+              <LogOut className="mr-2 h-4 w-4" />
               Logout
             </Button>
           </div>
@@ -188,7 +215,7 @@ const UserDashboard = () => {
         <div className="row mb-5">
           <div className="col-12">
             <div className="text-center text-white py-4">
-              <h1 className="display-5 fw-bold mb-3">Selamat Datang, {user?.masyarakat_nama || user?.username}! 👋</h1>
+              <h1 className="display-5 fw-bold mb-3">Selamat Datang, {currentUser?.masyarakat_nama || currentUser?.username}! 👋</h1>
               <p className="lead mb-4">Kelola pembayaran iuran RT Anda dengan mudah dan praktis</p>
               <div className="d-flex justify-content-center align-items-center gap-4 text-white-50">
                 <div className="d-flex align-items-center">
