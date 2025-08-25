@@ -3,6 +3,7 @@ import api from "../services/api";
 
 const AuthContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -28,6 +29,8 @@ export const AuthProvider = ({ children }) => {
   // Check if user is logged in on app start
   useEffect(() => {
     const checkAuth = async () => {
+      // Ensure we wait for profile fetch when token changes
+      setLoading(true);
       if (token) {
         try {
           const response = await api.get("/auth/profile");
@@ -36,6 +39,8 @@ export const AuthProvider = ({ children }) => {
           console.error("Auth check failed:", error);
           logout();
         }
+      } else {
+        setUser(null);
       }
       setLoading(false);
     };
@@ -150,9 +155,10 @@ export const AuthProvider = ({ children }) => {
     logout,
     updateProfile,
     changePassword,
-    isAuthenticated: !!user,
+    // Prevent race: consider freshly-stored token before state updates
+    isAuthenticated: !!(token || localStorage.getItem("token")),
     isAdmin: user?.role === "admin",
-    isUser: user?.role === "user",
+    isMasyarakat: user?.role === "masyarakat",
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

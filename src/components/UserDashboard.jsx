@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { User, Plus, LogOut, CreditCard, Clock, CheckCircle, XCircle } from "lucide-react";
+import { User, Plus, LogOut, CreditCard, Clock, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import api from "../services/api";
 import { toast } from "react-hot-toast";
@@ -18,7 +18,7 @@ const UserDashboard = () => {
     username: localStorage.getItem("userName"),
     masyarakat_nama: localStorage.getItem("userName"),
     masyarakat_nik: localStorage.getItem("userNIK"),
-    role: "user",
+    role: "masyarakat",
   };
 
   console.log("UserDashboard - Current user:", currentUser);

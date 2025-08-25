@@ -51,8 +51,10 @@ const Login = () => {
           localStorage.setItem("userNIK", result.user.masyarakat_nik || formData.nik);
 
           console.log("🚀 Masyarakat login - going to /user");
-          // Langsung redirect tanpa delay
-          window.location.href = "/user";
+          // Gunakan SPA navigation agar context state (user/token) langsung terbaca oleh ProtectedRoute
+          setTimeout(() => {
+            navigate("/user", { replace: true });
+          }, 0);
         } else {
           console.log("Admin/User login - going to /dashboard");
           setTimeout(() => {
@@ -88,7 +90,7 @@ const Login = () => {
               <div className="flex w-full rounded-lg border border-input bg-background p-1 shadow-sm gap-1">
                 <Button type="button" variant={loginType === "admin" ? "default" : "ghost"} className="flex-1" onClick={() => setLoginType("admin")} disabled={loading}>
                   <Shield className="mr-2 h-4 w-4" />
-                  Admin/User
+                  Admin
                 </Button>
                 <Button type="button" variant={loginType === "masyarakat" ? "default" : "ghost"} className="flex-1" onClick={() => setLoginType("masyarakat")} disabled={loading}>
                   <Users className="mr-2 h-4 w-4" />
@@ -152,8 +154,6 @@ const Login = () => {
                   {loginType === "admin" ? (
                     <>
                       Admin: admin / password123
-                      <br />
-                      User: ahmad.rizki / password123
                     </>
                   ) : (
                     <>

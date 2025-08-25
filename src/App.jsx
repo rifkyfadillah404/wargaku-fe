@@ -20,8 +20,15 @@ const ProtectedRoute = ({ children, requiredRole }) => {
   console.log("- loading:", loading);
   console.log("- requiredRole:", requiredRole);
 
-  if (loading) {
-    console.log("ProtectedRoute - Still loading...");
+  // If not authenticated at all, go to login
+  if (!isAuthenticated) {
+    console.log("ProtectedRoute - Not authenticated, redirecting to login");
+    return <Navigate to="/login" replace />;
+  }
+
+  // When token exists but user profile not yet loaded, or role is required but user still null -> wait
+  if (loading || (requiredRole && !user)) {
+    console.log("ProtectedRoute - Waiting for user/profile to load...");
     return (
       <div className="d-flex justify-content-center align-items-center min-vh-100">
         <div className="spinner-border text-primary" role="status">
@@ -31,12 +38,8 @@ const ProtectedRoute = ({ children, requiredRole }) => {
     );
   }
 
-  if (!isAuthenticated) {
-    console.log("ProtectedRoute - Not authenticated, redirecting to login");
-    return <Navigate to="/login" replace />;
-  }
-
-  if (requiredRole && user?.role !== requiredRole) {
+  // Role gate: only redirect if user is present and role mismatches
+  if (requiredRole && user && user.role !== requiredRole) {
     console.log("ProtectedRoute - Role mismatch, redirecting to dashboard");
     return <Navigate to="/dashboard" replace />;
   }
@@ -57,13 +60,13 @@ const DashboardRouter = () => {
   if (user?.role === "admin") {
     console.log("✅ Redirecting to AdminDashboard");
     return <AdminDashboard />;
-  } else if (user?.role === "user") {
+  } else if (user?.role === "masyarakat") {
     console.log("✅ Redirecting to UserDashboard");
     return <UserDashboard />;
   }
 
   console.log("❌ No valid role found, redirecting to login");
-  console.log("Available roles: admin, user");
+  console.log("Available roles: admin, masyarakat");
   console.log("Current role:", user?.role);
   return <Navigate to="/login" replace />;
 };
@@ -88,10 +91,24 @@ function App() {
             <Route path="/login" element={<Login />} />
 
             {/* PROPER USER DASHBOARD */}
-            <Route path="/user" element={<UserDashboard />} />
+            <Route
+              path="/user"
+              element={
+                <ProtectedRoute requiredRole="masyarakat">
+                  <UserDashboard />
+                </ProtectedRoute>
+              }
+            />
 
             {/* FORCE USER DASHBOARD - NO PROTECTION */}
-            <Route path="/user-dashboard" element={<UserDashboard />} />
+            <Route
+              path="/user-dashboard"
+              element={
+                <ProtectedRoute requiredRole="masyarakat">
+                  <UserDashboard />
+                </ProtectedRoute>
+              }
+            />
 
             <Route
               path="/dashboard"
